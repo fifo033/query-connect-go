@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/sonner';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
 
 const Index = () => {
   const [question, setQuestion] = useState('');
-  const [destinationUrl, setDestinationUrl] = useState('');
+  const [answer, setAnswer] = useState('Your answer will appear here...');
 
   const handleQuestionSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,47 +17,38 @@ const Index = () => {
       toast.error('Please enter a question');
       return;
     }
-
-    if (!destinationUrl.trim()) {
-      toast.error('Please enter a destination URL');
-      return;
-    }
-
-    // Encode the question to pass as a parameter
-    const encodedQuestion = encodeURIComponent(question);
-    const urlWithParam = `${destinationUrl}?question=${encodedQuestion}`;
-
-    // Open the destination URL in a new tab
-    window.open(urlWithParam, '_blank');
+    
+    // In a real implementation, you would send the question to a server or API
+    // For this demo, we'll just echo the question with a simple response
+    setAnswer(`You asked: "${question}"
+    
+This is a sample answer. In a real implementation, this would come from an API or backend system.`);
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-soft-purple p-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-lg p-8">
-        <h1 className="text-2xl font-bold mb-6 text-center text-dark-purple">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
+      <div className="w-full max-w-md">
+        <h1 className="text-2xl font-bold mb-6 text-center">
           Ask a Question
         </h1>
         <form onSubmit={handleQuestionSubmit} className="space-y-4">
-          <textarea
+          <Input
             value={question}
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Type your question here..."
-            className="w-full h-32 p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-purple"
-          />
-          <input
-            type="url"
-            value={destinationUrl}
-            onChange={(e) => setDestinationUrl(e.target.value)}
-            placeholder="Enter destination URL (https://example.com)"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-primary-purple"
+            className="w-full"
           />
           <Button 
             type="submit" 
-            className="w-full bg-primary-purple hover:bg-secondary-purple text-white"
+            className="w-full bg-green-500 hover:bg-green-600 text-white"
           >
-            Send Question
+            Send
           </Button>
         </form>
+        
+        <div className="mt-6 p-4 border border-gray-200 rounded-md min-h-[100px] whitespace-pre-line">
+          {answer}
+        </div>
       </div>
       <Toaster position="top-center" />
     </div>
