@@ -17,6 +17,7 @@ export default {
         'primary-purple': '#9b87f5',
         'secondary-purple': '#7E69AB',
         'dark-purple': '#1A1F2C',
+        'border': 'hsl(var(--border))', // Add this line to define border color
       },
     },
   },
