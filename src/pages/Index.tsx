@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -23,21 +22,28 @@ const Index = () => {
     setIsLoading(true);
     
     try {
-      // Connect to the provided API endpoint
-      const response = await fetch('https://sifiso.app.n8n.cloud/webhook/db156fa9-e99e-4a84-9cec-adbb11856bf5', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ question: question.trim() }),
-      });
+      const encodedQuestion = encodeURIComponent(question.trim());
+      const response = await fetch(
+        `https://sifiso.app.n8n.cloud/webhook/db156fa9-e99e-4a84-9cec-adbb11856bf5?question=${encodedQuestion}`,
+        {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
       
       if (!response.ok) {
         throw new Error(`Error: ${response.status}`);
       }
       
       const data = await response.json();
-      setAnswer(data.answer || 'No answer received from API.');
+      
+      if (data.statusCode === 200 && data.body && data.body.answer) {
+        setAnswer(data.body.answer);
+      } else {
+        throw new Error('Invalid response format');
+      }
       
     } catch (error) {
       console.error('Error fetching answer:', error);
