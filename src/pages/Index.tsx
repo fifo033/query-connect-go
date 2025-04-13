@@ -10,8 +10,9 @@ import { ThemeToggle } from '@/components/ThemeToggle';
 const Index = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('Your answer will appear here...');
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleQuestionSubmit = (e: React.FormEvent) => {
+  const handleQuestionSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!question.trim()) {
@@ -19,11 +20,32 @@ const Index = () => {
       return;
     }
     
-    // In a real implementation, you would send the question to a server or API
-    // For this demo, we'll just echo the question with a simple response
-    setAnswer(`You asked: "${question}"
+    setIsLoading(true);
     
-This is a sample answer. In a real implementation, this would come from an API or backend system.`);
+    try {
+      // Connect to the provided API endpoint
+      const response = await fetch('https://sifiso.app.n8n.cloud/webhook/db156fa9-e99e-4a84-9cec-adbb11856bf5', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ question: question.trim() }),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      
+      const data = await response.json();
+      setAnswer(data.answer || 'No answer received from API.');
+      
+    } catch (error) {
+      console.error('Error fetching answer:', error);
+      toast.error('Failed to get an answer. Please try again.');
+      setAnswer('Sorry, there was an error processing your question. Please try again later.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,12 +63,14 @@ This is a sample answer. In a real implementation, this would come from an API o
             onChange={(e) => setQuestion(e.target.value)}
             placeholder="Type your question here..."
             className="w-full"
+            disabled={isLoading}
           />
           <Button 
             type="submit" 
             className="w-full bg-green-500 hover:bg-green-600 text-white"
+            disabled={isLoading}
           >
-            Send
+            {isLoading ? 'Processing...' : 'Send'}
           </Button>
         </form>
         
