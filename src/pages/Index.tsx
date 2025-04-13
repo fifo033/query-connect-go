@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Toaster } from '@/components/ui/sonner';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { toast } from 'sonner';
+import { ThemeToggle } from '@/components/ThemeToggle';
 
 const Index = () => {
   const [question, setQuestion] = useState('');
@@ -26,9 +27,12 @@ This is a sample answer. In a real implementation, this would come from an API o
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white p-4">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-background p-4">
+      <div className="absolute top-4 right-4">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-md">
-        <h1 className="text-2xl font-bold mb-6 text-center">
+        <h1 className="text-2xl font-bold mb-6 text-center text-foreground">
           Ask a Question
         </h1>
         <form onSubmit={handleQuestionSubmit} className="space-y-4">
@@ -46,7 +50,7 @@ This is a sample answer. In a real implementation, this would come from an API o
           </Button>
         </form>
         
-        <div className="mt-6 p-4 border border-gray-200 rounded-md min-h-[100px] whitespace-pre-line">
+        <div className="mt-6 p-4 border border-gray-200 rounded-md min-h-[100px] whitespace-pre-line bg-background text-foreground">
           {answer}
         </div>
       </div>
