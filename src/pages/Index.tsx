@@ -24,7 +24,7 @@ const Index = () => {
     try {
       const encodedQuestion = encodeURIComponent(question.trim());
       const response = await fetch(
-        `https://sifiso.app.n8n.cloud/webhook/db156fa9-e99e-4a84-9cec-adbb11856bf5?question=${encodedQuestion}`,
+        `https://pavelsifisonondo.app.n8n.cloud/webhook/db156fa9-e99e-4a84-9cec-adbb11856bf5?question=${encodedQuestion}`,
         {
           method: 'GET',
           headers: {
